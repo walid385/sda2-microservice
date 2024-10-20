@@ -1,0 +1,47 @@
+# Compiled source
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific folders
+.vs/
+
+# Logs
+*.log
+log/
+
+# Local databases
+*.sqlite
+*.mdf
+*.ldf
+
+# Visual Studio working directory
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# Backup & Temporary files
+*_backup*
+*.tmp
+*.temp
+~$*
+
+# Environment settings
+appsettings.Development.json
+appsettings.Local.json
+
+# Package Management
+packages/
+*.nupkg
+*.snupkg
+
+# System files
+.DS_Store
+Thumbs.db
