@@ -58,14 +58,25 @@ namespace InventoryService.Controllers
 
             var product = _mapper.Map<ProductInventory>(productDto);
             await _repository.UpdateProductAsync(product);
-            return NoContent();
+            var updatedProductDto = _mapper.Map<ProductInventoryDto>(product);
+            return Ok(new { Message = "Product updated successfully", Product = updatedProductDto });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
+            var product = await _repository.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound("Product not found.");
+            }
+
+            // Now, delete the product
             await _repository.DeleteProductAsync(id);
-            return NoContent();
+
+            // Return the deleted product details as confirmation
+            var deletedProductDto = _mapper.Map<ProductInventoryDto>(product);
+            return Ok(new { Message = "Product deleted successfully", Product = deletedProductDto });
         }
     }
 }
