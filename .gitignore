@@ -1,0 +1,20 @@
+# System/OS specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+log/
+
+# User-specific files
+*.suo
+*.user
+*.rsuser
+*.swp
+*.vscode/
+.idea/
+
+# Build artifacts
+bin/
+obj/
+.vs/
