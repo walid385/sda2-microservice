@@ -1,0 +1,31 @@
+# Ignore build artifacts
+bin/
+obj/
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Ignore generated files
+Generated/
+*.generated.cs
+
+# Ignore SQLite databases (if used)
+*.sqlite
+*.db
+*.sqlite3
+
+# Ignore EF migrations
+Migrations/
+
+# Logs
+*.log
+
+# Ignore sensitive files (optional)
+appsettings.Development.json
+appsettings.Local.json
+
+# Rider and VS Code specific settings
+.idea/
+.vscode/

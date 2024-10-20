@@ -1,7 +1,28 @@
+using Microsoft.EntityFrameworkCore;
+using InventoryService.Data;  
+using InventoryService.Repositories;  
+using MassTransit;  
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddDbContext<InventoryContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("InventoryDatabase")));
+
+// Configure MassTransit with RabbitMQ
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq://localhost");
+    });
+});
+
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
