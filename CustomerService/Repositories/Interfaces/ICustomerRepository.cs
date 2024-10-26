@@ -11,6 +11,7 @@ namespace CustomerService.Repositories
         Task AddCustomerAsync(CustomerInfo customer);
         Task UpdateCustomerAsync(CustomerInfo customer);
         Task DeleteCustomerAsync(int customerId);
+        Task UpdateCustomerRewardsAsync(int customerId, int points);
 
     }
 }

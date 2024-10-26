@@ -1,6 +1,8 @@
 using CustomerService.Data;
 using CustomerService.Repositories;
 using Microsoft.EntityFrameworkCore;
+using MassTransit;
+using CustomerService.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,21 @@ builder.Services.AddSwaggerGen();
 // Add DbContext
 builder.Services.AddDbContext<CustomerContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CustomerDatabase")));
+
+    builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<UpdateCustomerRewardsConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq://localhost");
+        cfg.ReceiveEndpoint("update-customer-rewards-queue", e =>
+        {
+            e.ConfigureConsumer<UpdateCustomerRewardsConsumer>(context);
+        });
+    });
+});
+builder.Services.AddMassTransitHostedService();
 
     // Register repositories for DI
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();

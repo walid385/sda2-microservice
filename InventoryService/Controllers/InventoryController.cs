@@ -39,6 +39,20 @@ namespace InventoryService.Controllers
             return Ok(_mapper.Map<ProductInventoryDto>(product));
         }
 
+        [HttpGet("{id}/availability")]
+        public async Task<ActionResult<bool>> CheckProductAvailability(int id, [FromQuery] int quantity)
+        {
+            var product = await _repository.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound("Product not found.");
+            }
+
+            bool isAvailable = product.InStock >= quantity;
+            return Ok(isAvailable);
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<ProductInventoryDto>> CreateProduct(ProductInventoryDto productDto)
         {

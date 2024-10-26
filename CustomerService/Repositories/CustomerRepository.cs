@@ -44,5 +44,15 @@ namespace CustomerService.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task UpdateCustomerRewardsAsync(int customerId, int points)
+        {
+            var customer = await _context.Customers.FindAsync(customerId);
+            if (customer != null)
+            {
+                customer.Rewards += points;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

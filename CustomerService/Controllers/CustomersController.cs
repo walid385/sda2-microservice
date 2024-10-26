@@ -65,6 +65,22 @@ namespace CustomerService.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}/rewards")]
+        public async Task<IActionResult> UpdateCustomerRewards(int id, [FromQuery] int points)
+        {
+            var customer = await _repository.GetCustomerByIdAsync(id);
+            if (customer == null)
+            {
+                return NotFound("Customer not found.");
+            }
+
+            customer.Rewards += points;
+            await _repository.UpdateCustomerAsync(customer);
+
+            return Ok(new { Message = "Rewards updated successfully", Rewards = customer.Rewards });
+        }
+
+
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
