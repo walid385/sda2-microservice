@@ -37,6 +37,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Apply migrations here
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<CustomerContext>();
+    dbContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
