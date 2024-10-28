@@ -142,7 +142,6 @@ namespace CustomerService.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Reason")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ReturnDate")
