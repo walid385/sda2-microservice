@@ -9,6 +9,7 @@ namespace SalesService.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TicketId { get; set; }
+        public int ProductId { get; set; }
         public DateTime Date { get; set; }
         public string CompanyName { get; set; }
         public string Time { get; set; }

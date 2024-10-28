@@ -30,7 +30,7 @@ builder.Services.AddDbContext<CustomerContext>(options =>
         });
     });
 });
-builder.Services.AddMassTransitHostedService();
+
 
     // Register repositories for DI
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();

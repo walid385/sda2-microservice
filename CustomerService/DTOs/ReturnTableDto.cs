@@ -8,6 +8,6 @@ namespace CustomerService.DTOs
         public int CustomerId { get; set; }
         public int ProductId { get; set; }
         public DateTime ReturnDate { get; set; }
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using InventoryService.Data;
 using InventoryService.Repositories;
 using InventoryService.Events;
+using InventoryService.Consumers;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,13 +14,18 @@ builder.Services.AddDbContext<InventoryContext>(options =>
 // Configure MassTransit with RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<LowStockConsumer>(); // Add the consumer class that handles low stock events
+    x.AddConsumer<TemporaryLowStockConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("rabbitmq://localhost");
+        cfg.ReceiveEndpoint("temporary-low-stock-alert-queue", e =>
+        {
+            e.ConfigureConsumer<TemporaryLowStockConsumer>(context);
+        });
     });
 });
+
 
 builder.Services.AddMassTransitHostedService();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();

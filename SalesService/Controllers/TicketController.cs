@@ -2,6 +2,7 @@ using AutoMapper;
 using SalesService.DTOs;
 using SalesService.Models;
 using SalesService.Repositories;
+using SalesService.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SalesService.Controllers
@@ -43,14 +44,24 @@ namespace SalesService.Controllers
             }
             return Ok(_mapper.Map<TicketSystemDto>(ticket));
         }
-
         [HttpPost]
         public async Task<ActionResult<TicketSystemDto>> CreateTicket(TicketSystemDto ticketDto)
         {
+            // Check product availability
+            bool isAvailable = await _inventoryClient.CheckProductAvailability(ticketDto.ProductId, ticketDto.Quantity);
+
+            if (!isAvailable)
+            {
+                return BadRequest("Requested quantity is not available in stock.");
+            }
+
+            // Proceed with ticket creation if product is available
             var ticket = _mapper.Map<TicketSystem>(ticketDto);
             await _ticketRepository.AddTicketAsync(ticket);
+
             return CreatedAtAction(nameof(GetTicket), new { id = ticket.TicketId }, _mapper.Map<TicketSystemDto>(ticket));
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTicket(int id, TicketSystemDto ticketDto)

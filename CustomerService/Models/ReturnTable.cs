@@ -6,8 +6,8 @@ namespace CustomerService.Models
         public int CustomerId { get; set; } // Foreign Key
         public int ProductId { get; set; } // From Inventory Service
         public DateTime ReturnDate { get; set; }
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
 
-        public CustomerInfo Customer { get; set; }
+        public CustomerInfo? Customer { get; set; }
     }
 }

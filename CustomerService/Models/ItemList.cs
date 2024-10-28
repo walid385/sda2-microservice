@@ -7,6 +7,6 @@ namespace CustomerService.Models
         public int ProductId { get; set; } // From Inventory Service
         public int Quantity { get; set; }
 
-        public CartInProgress Cart { get; set; }
+        public CartInProgress? Cart { get; set; }
     }
 }

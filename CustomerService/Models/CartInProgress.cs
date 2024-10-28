@@ -10,7 +10,7 @@ namespace CustomerService.Models
         public int CustomerId { get; set; } // Foreign Key
         public DateTime CreatedAt { get; set; }
 
-        public CustomerInfo Customer { get; set; }
-        public ICollection<ItemList> ItemLists { get; set; }
+        public CustomerInfo? Customer { get; set; }
+        public ICollection<ItemList>? ItemLists { get; set; }
     }
 }

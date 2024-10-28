@@ -1,0 +1,30 @@
+services:
+  customer-service:
+    build:
+      context: ./CustomerService
+    ports:
+      - "5000:80"  # Maps container port 80 to host port 5000
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  inventory-service:
+    build:
+      context: ./InventoryService
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  sales-service:
+    build:
+      context: ./SalesService
+    ports:
+      - "5002:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  rabbitmq:
+    image: "rabbitmq:management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"

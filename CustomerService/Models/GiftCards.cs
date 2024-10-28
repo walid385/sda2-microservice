@@ -7,6 +7,6 @@ namespace CustomerService.Models
         public decimal Balance { get; set; }
         public DateTime ExpiryDate { get; set; }
 
-        public CustomerInfo Customer { get; set; }
+        public CustomerInfo? Customer { get; set; }
     }
 }

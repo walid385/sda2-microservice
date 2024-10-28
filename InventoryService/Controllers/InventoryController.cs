@@ -84,11 +84,8 @@ namespace InventoryService.Controllers
             {
                 return NotFound("Product not found.");
             }
-
-            // Now, delete the product
             await _repository.DeleteProductAsync(id);
 
-            // Return the deleted product details as confirmation
             var deletedProductDto = _mapper.Map<ProductInventoryDto>(product);
             return Ok(new { Message = "Product deleted successfully", Product = deletedProductDto });
         }
