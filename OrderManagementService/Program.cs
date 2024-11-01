@@ -1,39 +1,28 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using SalesService.Data;
-using SalesService.Repositories;
-using SalesService.Consumers;
-using SalesService.Services;
-using AutoMapper;
+using OrderManagementService.Data;
+using OrderManagementService.Repositories;
+using OrderManagementService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure DbContext for SalesService
-builder.Services.AddDbContext<SalesContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("SalesDatabase")));
+builder.Services.AddDbContext<OrderContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("OrderManagementDatabase")));
 
-// Configure MassTransit and RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<OrderEventConsumer>();
-
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("rabbitmq");
-        cfg.ReceiveEndpoint("order-events-queue", e =>
-        {
-            e.ConfigureConsumer<OrderEventConsumer>(context);
-        });
     });
 });
 
-// Register dependencies without an interface for InventoryClient
 builder.Services.AddHttpClient<InventoryClient>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5001");
 });
 
-builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -50,3 +39,4 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+

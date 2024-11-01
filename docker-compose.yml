@@ -23,6 +23,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
+  order-service:
+    build:
+      context: ./OrderManagementService
+    ports:
+      - "5003:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
   rabbitmq:
     image: "rabbitmq:management"
     ports:
