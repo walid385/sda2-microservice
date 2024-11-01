@@ -18,6 +18,7 @@ namespace CustomerService.Consumers
         {
             var message = context.Message;
             await _repository.UpdateCustomerRewardsAsync(message.CustomerId, message.Points);
+            Console.WriteLine($"Customer rewards updated for customer ID: {message.CustomerId}");
         }
     }
 }
