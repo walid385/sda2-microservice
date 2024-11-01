@@ -18,4 +18,5 @@ RUN dotnet publish -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "SalesService.dll", "database update"]
+COPY ./sales.db /app/sales.db 
+ENTRYPOINT ["dotnet", "SalesService.dll"]

@@ -22,7 +22,7 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<UpdateCustomerRewardsConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq://localhost");
+        cfg.Host("rabbitmq");
         cfg.ReceiveEndpoint("update-customer-rewards-queue", e =>
         {
             e.ConfigureConsumer<UpdateCustomerRewardsConsumer>(context);
@@ -41,6 +41,7 @@ builder.Services.AddScoped<IItemListRepository, ItemListRepository>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
+
 
 
 // Configure the HTTP request pipeline.

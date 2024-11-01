@@ -4,6 +4,8 @@ using SalesService.Models;
 using SalesService.Repositories;
 using SalesService.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SalesService.Controllers
 {
@@ -20,11 +22,6 @@ namespace SalesService.Controllers
             _ticketRepository = ticketRepository;
             _mapper = mapper;
             _inventoryClient = inventoryClient;
-        }
-
-        public async Task<bool> IsProductAvailable(int productId, int quantity)
-        {
-            return await _inventoryClient.CheckProductAvailability(productId, quantity);
         }
 
         [HttpGet]
@@ -44,6 +41,14 @@ namespace SalesService.Controllers
             }
             return Ok(_mapper.Map<TicketSystemDto>(ticket));
         }
+
+        [HttpGet("check-availability")]
+        public async Task<ActionResult<bool>> IsProductAvailable([FromQuery] int productId, [FromQuery] int quantity)
+        {
+            var isAvailable = await _inventoryClient.CheckProductAvailability(productId, quantity);
+            return Ok(isAvailable);
+        }
+
         [HttpPost]
         public async Task<ActionResult<TicketSystemDto>> CreateTicket(TicketSystemDto ticketDto)
         {
@@ -61,7 +66,6 @@ namespace SalesService.Controllers
 
             return CreatedAtAction(nameof(GetTicket), new { id = ticket.TicketId }, _mapper.Map<TicketSystemDto>(ticket));
         }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTicket(int id, TicketSystemDto ticketDto)

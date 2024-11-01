@@ -18,7 +18,7 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq://localhost");
+        cfg.Host("rabbitmq");
         cfg.ReceiveEndpoint("temporary-low-stock-alert-queue", e =>
         {
             e.ConfigureConsumer<TemporaryLowStockConsumer>(context);
@@ -37,12 +37,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Apply migrations here
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<CustomerContext>();
-    dbContext.Database.Migrate();
-}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
