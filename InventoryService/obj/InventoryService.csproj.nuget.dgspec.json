@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/walidboulhazayez/Documents/SDA-Microservices/InventoryService/InventoryService.csproj": {}
+    "/Users/walidboulhazayez/Documents/sda2-microservice/InventoryService/InventoryService.csproj": {}
   },
   "projects": {
-    "/Users/walidboulhazayez/Documents/SDA-Microservices/InventoryService/InventoryService.csproj": {
+    "/Users/walidboulhazayez/Documents/sda2-microservice/InventoryService/InventoryService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/walidboulhazayez/Documents/SDA-Microservices/InventoryService/InventoryService.csproj",
+        "projectUniqueName": "/Users/walidboulhazayez/Documents/sda2-microservice/InventoryService/InventoryService.csproj",
         "projectName": "InventoryService",
-        "projectPath": "/Users/walidboulhazayez/Documents/SDA-Microservices/InventoryService/InventoryService.csproj",
+        "projectPath": "/Users/walidboulhazayez/Documents/sda2-microservice/InventoryService/InventoryService.csproj",
         "packagesPath": "/Users/walidboulhazayez/.nuget/packages/",
-        "outputPath": "/Users/walidboulhazayez/Documents/SDA-Microservices/InventoryService/obj/",
+        "outputPath": "/Users/walidboulhazayez/Documents/sda2-microservice/InventoryService/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/walidboulhazayez/.nuget/NuGet/NuGet.Config"

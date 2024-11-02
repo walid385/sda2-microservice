@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GSzPVHk/gqBpFyZ8ybNmG9RFm55w6xcic31XlPps4jWs+pWpst8zq+2teG3GoSaQ/CUeIR0h88pKHaNOIR3fww==",
+  "dgSpecHash": "I+7qRQEmfp1mL+IT41zgw6Fd4ZL4WYMgi29bDJ9MN/dMUZLwg8nja1+XXCkRh5OnvXGtKie2V1WGBychI20p7Q==",
   "success": true,
-  "projectFilePath": "/Users/walidboulhazayez/Documents/SDA-Microservices/InventoryService/InventoryService.csproj",
+  "projectFilePath": "/Users/walidboulhazayez/Documents/sda2-microservice/InventoryService/InventoryService.csproj",
   "expectedPackageFiles": [
     "/Users/walidboulhazayez/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/Users/walidboulhazayez/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

@@ -47,7 +47,7 @@ namespace OrderManagementService.Controllers
             return Ok(_mapper.Map<OrderDto>(order));
         }
 
-        [HttpPost]
+         [HttpPost]
         public async Task<ActionResult> CreateOrder(CreateOrderDto createOrderDto)
         {
             // Fetch product details from InventoryService
@@ -65,7 +65,7 @@ namespace OrderManagementService.Controllers
             }
 
             // Calculate the total amount
-            var totalAmount = product.Price * createOrderDto.Quantity;
+            var totalAmount = product.UnitPrice * createOrderDto.Quantity;
 
             // Map CreateOrderDto to Order entity
             var order = _mapper.Map<Order>(createOrderDto);
@@ -78,6 +78,8 @@ namespace OrderManagementService.Controllers
             // Map Order to OrderCreatedEvent for publishing
             var orderCreatedEvent = _mapper.Map<OrderCreatedEvent>(order);
             await _publishEndpoint.Publish(orderCreatedEvent);
+            Console.WriteLine($"Published OrderCreatedEvent for Order ID: {order.OrderId}");
+
 
             return CreatedAtAction(nameof(GetOrder), new { id = order.OrderId }, _mapper.Map<OrderDto>(order));
         }
@@ -108,7 +110,7 @@ namespace OrderManagementService.Controllers
             }
 
             // Calculate the total amount
-            var totalAmount = product.Price * updateOrderDto.Quantity;
+            var totalAmount = product.UnitPrice * updateOrderDto.Quantity;
 
             // Update order properties
             existingOrder.ProductId = updateOrderDto.ProductId;
