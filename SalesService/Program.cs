@@ -13,6 +13,7 @@ builder.Services.AddDbContext<SalesContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("SalesDatabase")));
 
 // Configure MassTransit and RabbitMQ
+// SalesService Program.cs
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<OrderEventConsumer>();
@@ -21,11 +22,13 @@ builder.Services.AddMassTransit(x =>
     {
         cfg.Host("rabbitmq");
         cfg.ReceiveEndpoint("order-events-queue", e =>
-        {
-            e.ConfigureConsumer<OrderEventConsumer>(context);
-        });
+{
+    e.ConfigureConsumer<OrderEventConsumer>(context);
+});
+
     });
 });
+
 
 // Register dependencies without an interface for InventoryClient
 builder.Services.AddHttpClient<InventoryClient>(client =>

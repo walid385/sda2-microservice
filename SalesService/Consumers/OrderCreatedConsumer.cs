@@ -1,3 +1,4 @@
+using MassTransit.RabbitMqTransport;
 using MassTransit;
 using SalesService.Events;
 using SalesService.Models;
@@ -19,8 +20,10 @@ namespace SalesService.Consumers
         public async Task Consume(ConsumeContext<OrderCreatedEvent> context)
         {
             var orderEvent = context.Message;
-
             Console.WriteLine($"Received OrderCreatedEvent: Order ID = {orderEvent.OrderId}, Product ID = {orderEvent.ProductId}");
+
+            // Additional logging
+            Console.WriteLine("Processing the ticket creation...");
 
             bool paymentSuccess = ProcessPayment(orderEvent);
             if (!paymentSuccess)

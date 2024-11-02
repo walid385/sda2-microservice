@@ -3,9 +3,11 @@ services:
     build:
       context: ./CustomerService
     ports:
-      - "5000:80"  # Maps container port 80 to host port 5000
+      - "5000:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - customer-data:/customerservice.db 
 
   inventory-service:
     build:
@@ -14,6 +16,8 @@ services:
       - "5001:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - inventory-data:/inventory.db 
 
   sales-service:
     build:
@@ -22,6 +26,8 @@ services:
       - "5002:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - sales-data:/sales.db 
 
   order-service:
     build:
@@ -30,9 +36,28 @@ services:
       - "5003:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - order-data:/orderservice.db 
+
+  vendor-service:
+    build:
+      context: ./VendorService
+    ports:
+      - "5004:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - vendor-data:/vendor.db
 
   rabbitmq:
     image: "rabbitmq:management"
     ports:
       - "5672:5672"
       - "15672:15672"
+
+volumes:
+  customer-data:
+  inventory-data:
+  sales-data:
+  order-data:
+  vendor-data:
