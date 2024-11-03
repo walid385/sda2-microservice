@@ -2,6 +2,7 @@ using AutoMapper;
 using CustomerService.DTOs;
 using CustomerService.Models;
 using CustomerService.Repositories;
+using CustomerService.Services;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -13,11 +14,12 @@ namespace CustomerService.Controllers
     {
         private readonly ICartRepository _repository;
         private readonly IMapper _mapper;
-
-        public CartsController(ICartRepository repository, IMapper mapper)
+        private readonly OrderManagementClient _orderManagementClient;
+        public CartsController(ICartRepository repository, IMapper mapper, OrderManagementClient orderManagementClient )
         {
             _repository = repository;
             _mapper = mapper;
+            _orderManagementClient = orderManagementClient;
         }
 
         // GET: api/Carts/ByCustomer/5
@@ -32,47 +34,30 @@ namespace CustomerService.Controllers
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout(int customerId)
         {
-            // Fetch the customer's carts and include their items
             var carts = await _repository.GetCartsByCustomerIdAsync(customerId);
 
-            // Check if any cart exists for the customer and has items
-            if (carts == null || !carts.Any() || !carts.Any(cart => cart.ItemLists.Any()))
+            if (carts == null || !carts.Any() || !carts.SelectMany(cart => cart.ItemLists).Any())
             {
                 return BadRequest("Cart is empty.");
             }
 
-            // Calculate the total amount from all items
-            float totalAmount = carts
-                .SelectMany(cart => cart.ItemLists)
-                .Sum(item => item.Quantity * item.UnitPrice);
-
-            // Create an order DTO to simulate order creation
-            var orderDto = new CreateOrderDto
+            foreach (var item in carts.SelectMany(cart => cart.ItemLists))
             {
-                CustomerId = customerId,
-                TotalAmount = totalAmount,
-                Items = carts
-                    .SelectMany(cart => cart.ItemLists)
-                    .Select(item => new OrderItemDto
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity
-                    }).ToList(),
-                CreatedAt = DateTime.UtcNow
-            };
+                var orderDto = new CreateOrderDto
+                {
+                    CustomerId = customerId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity
+                };
 
-            // Log the simulated order creation
-            Console.WriteLine("Order placed successfully (simulated):");
-            Console.WriteLine($"Customer ID: {orderDto.CustomerId}");
-            Console.WriteLine($"Total Amount: {orderDto.TotalAmount}");
-            Console.WriteLine("Items:");
-            foreach (var item in orderDto.Items)
-            {
-                Console.WriteLine($" - Product ID: {item.ProductId}, Quantity: {item.Quantity}");
+                var success = await _orderManagementClient.CreateOrder(orderDto);
+                if (!success)
+                {
+                    return StatusCode(500, "Failed to place order for product " + item.ProductId);
+                }
             }
 
-            // Return a successful response
-            return Ok("Order placed successfully (simulated).");
+            return Ok("All orders placed successfully.");
         }
 
         // GET: api/Carts/5

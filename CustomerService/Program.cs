@@ -3,6 +3,7 @@ using CustomerService.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using CustomerService.Consumers;
+using CustomerService.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,12 @@ builder.Services.AddMassTransit(x =>
             e.ConfigureConsumer<UpdateCustomerRewardsConsumer>(context);
         });
     });
+});
+
+// Register dependencies without an interface for OrderManagementService
+builder.Services.AddHttpClient<OrderManagementClient>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5001");
 });
 
 // Register repositories for Dependency Injection
