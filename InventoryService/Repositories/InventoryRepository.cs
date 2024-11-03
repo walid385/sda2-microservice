@@ -64,6 +64,8 @@ namespace InventoryService.Repositories
                     Quantity = product.InStock
                 };
                 await _publishEndpoint.Publish(lowStockEvent);
+                Console.WriteLine($"Published LowStockEvent for Product ID: {product.ProductId}");
+
             }
         }
     }

@@ -16,18 +16,17 @@ builder.Services.AddDbContext<SalesContext>(options =>
 // SalesService Program.cs
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<OrderEventConsumer>();
-
+    x.AddConsumer<OrderCreatedConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("rabbitmq");
-        cfg.ReceiveEndpoint("order-events-queue", e =>
-{
-    e.ConfigureConsumer<OrderEventConsumer>(context);
-});
-
+        cfg.ReceiveEndpoint("order-created-queue", e =>
+        {
+            e.ConfigureConsumer<OrderCreatedConsumer>(context);
+        });
     });
 });
+
 
 
 // Register dependencies without an interface for InventoryClient

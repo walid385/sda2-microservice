@@ -1,4 +1,3 @@
-using MassTransit.RabbitMqTransport;
 using MassTransit;
 using SalesService.Events;
 using SalesService.Models;
@@ -8,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace SalesService.Consumers
 {
-    public class OrderEventConsumer : IConsumer<OrderCreatedEvent>
+    public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
     {
         private readonly ITicketRepository _ticketRepository;
 
-        public OrderEventConsumer(ITicketRepository ticketRepository)
+        public OrderCreatedConsumer(ITicketRepository ticketRepository)
         {
             _ticketRepository = ticketRepository;
         }
@@ -20,39 +19,22 @@ namespace SalesService.Consumers
         public async Task Consume(ConsumeContext<OrderCreatedEvent> context)
         {
             var orderEvent = context.Message;
-            Console.WriteLine($"Received OrderCreatedEvent: Order ID = {orderEvent.OrderId}, Product ID = {orderEvent.ProductId}");
 
-            // Additional logging
-            Console.WriteLine("Processing the ticket creation...");
-
-            bool paymentSuccess = ProcessPayment(orderEvent);
-            if (!paymentSuccess)
-            {
-                Console.WriteLine($"Payment failed for Order ID: {orderEvent.OrderId}");
-                return;
-            }
-
+            // Create a ticket based on the single product in the event
             var ticket = new TicketSystem
             {
                 ProductId = orderEvent.ProductId,
-                Date = DateTime.Now,
-                CompanyName = "YourCompanyName",
-                Time = DateTime.Now.ToString("HH:mm:ss"),
-                Quantity = orderEvent.Quantity,
-                Subtotal = orderEvent.Total * 0.9f,
-                Total = orderEvent.Total,
                 CustomerId = orderEvent.CustomerId,
-                EmployeeId = 1
+                Quantity = orderEvent.Quantity,
+                Total = orderEvent.TotalAmount,
+                Date = DateTime.UtcNow,
+                CompanyName = "DefaultCompany",     // Placeholder or default value
+                Time = DateTime.UtcNow.ToString("HH:mm:ss"),  // Current time as a string
+                Subtotal = orderEvent.TotalAmount * 0.9f,  // Assuming a 10% discount for example
             };
 
             await _ticketRepository.AddTicketAsync(ticket);
-            Console.WriteLine($"Sales ticket created for Order ID: {orderEvent.OrderId}");
-        }
-
-        private bool ProcessPayment(OrderCreatedEvent orderEvent)
-        {
-            Console.WriteLine($"Processing payment for Order ID: {orderEvent.OrderId}, Amount: {orderEvent.Total}");
-            return true;
+            Console.WriteLine($"Ticket created for Product ID: {ticket.ProductId}, Order ID: {orderEvent.OrderId}");
         }
     }
 }

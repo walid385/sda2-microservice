@@ -2,6 +2,8 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using VendorService.Models;
 using VendorService.Data;
+using VendorService.Consumers;
+using VendorService.Events;
 using VendorService.Repositories;
 using AutoMapper;
 using VendorService.DTOs;
@@ -15,9 +17,14 @@ builder.Services.AddDbContext<VendorContext>(options =>
 builder.Services.AddMassTransit(x =>
 {
 
+    x.AddConsumer<LowStockConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("rabbitmq");
+        cfg.ReceiveEndpoint("temporary-low-stock-alert-queue", e =>
+        {
+            e.ConfigureConsumer<LowStockConsumer>(context);
+        });
         
     });
 });
