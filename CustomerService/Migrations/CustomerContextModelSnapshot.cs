@@ -122,6 +122,9 @@ namespace CustomerService.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
+                    b.Property<float>("UnitPrice")
+                        .HasColumnType("REAL");
+
                     b.HasKey("ItemListId");
 
                     b.HasIndex("CartId");

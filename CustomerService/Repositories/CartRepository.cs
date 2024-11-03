@@ -17,6 +17,7 @@ namespace CustomerService.Repositories
         public async Task<IEnumerable<CartInProgress>> GetCartsByCustomerIdAsync(int customerId)
         {
             return await _context.CartsInProgress
+                .Include(c => c.ItemLists)
                 .Where(c => c.CustomerId == customerId)
                 .ToListAsync();
         }
