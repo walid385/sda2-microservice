@@ -22,6 +22,7 @@ builder.Services.AddHttpClient<InventoryClient>(client =>
     client.BaseAddress = new Uri("http://localhost:5001");
 });
 
+
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();

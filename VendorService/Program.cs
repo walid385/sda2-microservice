@@ -1,12 +1,10 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using VendorService.Models;
-using VendorService.Data;
 using VendorService.Consumers;
+using VendorService.Data;
 using VendorService.Events;
 using VendorService.Repositories;
-using AutoMapper;
-using VendorService.DTOs;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,26 +12,28 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<VendorContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("VendorDatabase")));
 
+// Configure MassTransit with RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<LowStockConsumer>(); // Register the consumer
 
-    x.AddConsumer<LowStockConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq");
-        cfg.ReceiveEndpoint("temporary-low-stock-alert-queue", e =>
+        cfg.Host("localhost", "/", h =>
         {
-            e.ConfigureConsumer<LowStockConsumer>(context);
+            h.Username("guest");
+            h.Password("guest");
         });
-        
+
+        cfg.ReceiveEndpoint("low_stock_alert_queue", e =>
+        {
+            e.ConfigureConsumer<LowStockConsumer>(context); // Bind the consumer to the queue
+        });
     });
 });
 
-// Configure dependency injection
+// Dependency injection for repository
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
-
-// Configure AutoMapper
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Add controllers
 builder.Services.AddControllers();

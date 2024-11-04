@@ -3,6 +3,7 @@ using InventoryService.Data;
 using InventoryService.Repositories;
 using InventoryService.Events;
 using InventoryService.Consumers;
+using InventoryService.Publisher;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,24 +12,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<InventoryContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("InventoryDatabase")));
 
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<LowStockEventPublisher>();
+
 // Configure MassTransit with RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<TemporaryLowStockConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq");
-        cfg.ReceiveEndpoint("temporary-low-stock-alert-queue", e =>
+        cfg.Host("rabbitmq", h =>
         {
-            e.ConfigureConsumer<TemporaryLowStockConsumer>(context);
+            h.Username("guest");
+            h.Password("guest");
         });
+
     });
 });
 
 
-builder.Services.AddMassTransitHostedService();
-builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();

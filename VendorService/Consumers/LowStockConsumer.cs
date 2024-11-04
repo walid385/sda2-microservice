@@ -1,6 +1,7 @@
 using MassTransit;
-using VendorService.Events;
+using System;
 using System.Threading.Tasks;
+using VendorService.Events;
 
 namespace VendorService.Consumers
 {
@@ -10,11 +11,11 @@ namespace VendorService.Consumers
         {
             var lowStockEvent = context.Message;
 
-            // Log or handle the low stock event
-            Console.WriteLine($"Low stock alert received for Product ID: {lowStockEvent.ProductId}, Quantity: {lowStockEvent.Quantity}");
+            Console.WriteLine($"[x] Received LowStockEvent - Product ID: {lowStockEvent.ProductId}, Quantity: {lowStockEvent.Quantity}");
 
-            // Here, you could place logic to create an order with the vendor to restock the product
-            // This could involve calling the repository or another service to place the order
+            // Handle the low stock event, e.g., place an order to restock the product
+            await Task.CompletedTask;
         }
     }
 }
+

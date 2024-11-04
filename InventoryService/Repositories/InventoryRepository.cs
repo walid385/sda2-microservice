@@ -1,6 +1,7 @@
 using InventoryService.Data;
 using InventoryService.Models;
 using InventoryService.Events;
+using InventoryService.Publisher;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace InventoryService.Repositories
     public class InventoryRepository : IInventoryRepository
     {
         private readonly InventoryContext _context;
-        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly LowStockEventPublisher _eventPublisher;
 
-        public InventoryRepository(InventoryContext context, IPublishEndpoint publishEndpoint)
+        public InventoryRepository(InventoryContext context, LowStockEventPublisher eventPublisher)
         {
             _context = context;
-            _publishEndpoint = publishEndpoint;
+            _eventPublisher = eventPublisher;
         }
 
         public async Task<IEnumerable<ProductInventory>> GetAllProductsAsync()
@@ -39,7 +40,7 @@ namespace InventoryService.Repositories
         {
             _context.ProductInventories.Update(product);
             await _context.SaveChangesAsync();
-            await CheckAndNotifyLowStock(product);
+            await CheckStockAndNotify(product.ProductId, product.InStock);
         }
 
         public async Task DeleteProductAsync(int productId)
@@ -52,21 +53,15 @@ namespace InventoryService.Repositories
             }
         }
 
-        private async Task CheckAndNotifyLowStock(ProductInventory product)
-        {
-            const int threshold = 2;  // Example threshold
-            if (product.InStock < threshold)
-            {
-                var lowStockEvent = new LowStockEvent
-                {
-                    ProductId = product.ProductId,
-                    ProductName = product.ProductName,
-                    Quantity = product.InStock
-                };
-                await _publishEndpoint.Publish(lowStockEvent);
-                Console.WriteLine($"Published LowStockEvent for Product ID: {product.ProductId}");
 
+        public async Task CheckStockAndNotify(int productId, int quantity)
+        {
+            if (quantity < 3) // Define a threshold
+            {
+                await _eventPublisher.PublishLowStockEvent(productId, quantity);
             }
         }
+
+
     }
 }

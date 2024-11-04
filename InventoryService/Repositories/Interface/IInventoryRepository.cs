@@ -11,6 +11,7 @@ namespace InventoryService.Repositories
         Task AddProductAsync(ProductInventory product);
         Task UpdateProductAsync(ProductInventory product);
         Task DeleteProductAsync(int productId);
+        Task CheckStockAndNotify(int productId, int quantity);
         
     }
 }

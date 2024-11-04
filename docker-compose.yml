@@ -1,4 +1,13 @@
 services:
+  rabbitmq:
+    image: "rabbitmq:management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+
   customer-service:
     build:
       context: ./CustomerService
@@ -48,15 +57,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
       - vendor-data:/vendor.db
-
-  rabbitmq:
-    image: "rabbitmq:management"
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
 
 volumes:
   customer-data:
