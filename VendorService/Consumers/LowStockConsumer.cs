@@ -1,21 +1,18 @@
 using MassTransit;
-using System;
-using System.Threading.Tasks;
 using VendorService.Events;
 
 namespace VendorService.Consumers
 {
-    public class LowStockConsumer : IConsumer<LowStockEvent>
+    public class LowStockConsumer : IConsumer<ILowStockEvent>
     {
-        public async Task Consume(ConsumeContext<LowStockEvent> context)
+        public async Task Consume(ConsumeContext<ILowStockEvent> context)
         {
-            var lowStockEvent = context.Message;
+            // Logic for handling the low stock event
+            var productId = context.Message.ProductId;
+            var quantity = context.Message.Quantity;
 
-            Console.WriteLine($"[x] Received LowStockEvent - Product ID: {lowStockEvent.ProductId}, Quantity: {lowStockEvent.Quantity}");
-
-            // Handle the low stock event, e.g., place an order to restock the product
-            await Task.CompletedTask;
+            // Example: Log the received message
+            Console.WriteLine($"Low stock alert received for ProductId: {productId}, Quantity: {quantity}");
         }
     }
 }
-

@@ -3,7 +3,6 @@ using MassTransit;
 using System.Threading.Tasks;
 using InventoryService.Events;
 
-
 [ApiController]
 [Route("api/[controller]")]
 public class TestController : ControllerBase
@@ -18,13 +17,15 @@ public class TestController : ControllerBase
     [HttpPost("trigger-low-stock")]
     public async Task<IActionResult> TriggerLowStock(int productId, int quantity)
     {
-        var lowStockEvent = new LowStockEvent
+        await _publishEndpoint.Publish<ILowStockEvent>(new
         {
             ProductId = productId,
             Quantity = quantity
-        };
-        
-        await _publishEndpoint.Publish(lowStockEvent);
+        }, context =>
+        {
+            context.SetRoutingKey("low_stock"); // Set the routing key for the direct exchange
+        });
+
         return Ok("Low stock event triggered");
     }
 }

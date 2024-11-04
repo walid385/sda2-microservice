@@ -1,7 +1,6 @@
 using InventoryService.Data;
 using InventoryService.Models;
 using InventoryService.Events;
-using InventoryService.Publisher;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -12,12 +11,12 @@ namespace InventoryService.Repositories
     public class InventoryRepository : IInventoryRepository
     {
         private readonly InventoryContext _context;
-        private readonly LowStockEventPublisher _eventPublisher;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public InventoryRepository(InventoryContext context, LowStockEventPublisher eventPublisher)
+        public InventoryRepository(InventoryContext context, IPublishEndpoint publishEndpoint)
         {
             _context = context;
-            _eventPublisher = eventPublisher;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<IEnumerable<ProductInventory>> GetAllProductsAsync()
@@ -53,15 +52,20 @@ namespace InventoryService.Repositories
             }
         }
 
-
         public async Task CheckStockAndNotify(int productId, int quantity)
         {
             if (quantity < 3) // Define a threshold
             {
-                await _eventPublisher.PublishLowStockEvent(productId, quantity);
+                // Directly publish the event using IPublishEndpoint
+                await _publishEndpoint.Publish<ILowStockEvent>(new
+                {
+                    ProductId = productId,
+                    Quantity = quantity
+                }, context =>
+                {
+                    context.SetRoutingKey("low_stock"); // Ensure the routing key matches
+                });
             }
         }
-
-
     }
 }

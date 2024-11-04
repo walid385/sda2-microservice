@@ -15,19 +15,38 @@ builder.Services.AddDbContext<VendorContext>(options =>
 // Configure MassTransit with RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<LowStockConsumer>(); // Register the consumer
+    // Register the consumer
+    x.AddConsumer<LowStockConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", "/", h =>
+        cfg.Host("rabbitmq", "/", h =>
         {
             h.Username("guest");
             h.Password("guest");
         });
 
+        // Configure the exchange for publishing
+        cfg.Message<ILowStockEvent>(e =>
+        {
+            e.SetEntityName("InventoryService.Events:LowStockEvent");
+        });
+
+        cfg.Publish<ILowStockEvent>(e =>
+        {
+            e.ExchangeType = "direct"; // Set the exchange type to direct
+        });
+
+        // Configure the consumer to listen to a direct exchange with routing key
         cfg.ReceiveEndpoint("low_stock_alert_queue", e =>
         {
-            e.ConfigureConsumer<LowStockConsumer>(context); // Bind the consumer to the queue
+            e.ConfigureConsumer<LowStockConsumer>(context);
+
+            e.Bind("InventoryService.Events:LowStockEvent", s =>
+            {
+                s.RoutingKey = "low_stock";
+                s.ExchangeType = "direct";
+            });
         });
     });
 });
