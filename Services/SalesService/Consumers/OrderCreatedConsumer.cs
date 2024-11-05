@@ -23,14 +23,16 @@ namespace SalesService.Consumers
             // Create a ticket based on the single product in the event
             var ticket = new TicketSystem
             {
+
                 ProductId = orderEvent.ProductId,
                 CustomerId = orderEvent.CustomerId,
                 Quantity = orderEvent.Quantity,
                 Total = orderEvent.TotalAmount,
                 Date = DateTime.UtcNow,
-                CompanyName = "DefaultCompany",     // Placeholder or default value
-                Time = DateTime.UtcNow.ToString("HH:mm:ss"),  // Current time as a string
-                Subtotal = orderEvent.TotalAmount * 0.9f,  // Assuming a 10% discount for example
+                CompanyName = "DefaultCompany", 
+                Time = DateTime.UtcNow.ToString("HH:mm:ss"),  
+                Subtotal = orderEvent.TotalAmount * 0.9m 
+                
             };
 
             await _ticketRepository.AddTicketAsync(ticket);

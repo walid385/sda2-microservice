@@ -41,12 +41,11 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-
-// Register dependencies without an interface for OrderManagementService
-builder.Services.AddHttpClient<OrderManagementClient>(client =>
+builder.Services.AddHttpClient<InventoryClient>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5001");
 });
+
 
 // Register repositories for Dependency Injection
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();

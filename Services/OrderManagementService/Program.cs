@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using OrderManagementService.Data;
 using OrderManagementService.Repositories;
 using OrderManagementService.Services;
+using Events;
+using OrderManagementService.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +13,38 @@ builder.Services.AddDbContext<OrderContext>(options =>
 
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<OrderCreatedConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq");
+        cfg.Host("rabbitmq", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.Message<OrderCreatedEvent>(e =>
+        {
+            e.SetEntityName("Events:OrderCreatedEvent"); // Same exchange name
+        });
+
+        cfg.Publish<OrderCreatedEvent>(e =>
+        {
+            e.ExchangeType = "direct";
+        });
+
+        cfg.ReceiveEndpoint("order-management-order-created-queue", e =>
+        {
+            e.ConfigureConsumer<OrderCreatedConsumer>(context);
+
+            e.Bind("Events:OrderCreatedEvent", s =>
+            {
+                s.RoutingKey = "orderCreated"; // Same routing key
+                s.ExchangeType = "direct";
+            });
+        });
     });
 });
+
 
 builder.Services.AddHttpClient<InventoryClient>(client =>
 {
