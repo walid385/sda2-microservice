@@ -1,4 +1,4 @@
-namespace InventoryService.Events
+namespace Events
 {
     public interface ILowStockEvent
     {

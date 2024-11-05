@@ -2,7 +2,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using VendorService.Consumers;
 using VendorService.Data;
-using VendorService.Events;
+using Events;
 using VendorService.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 

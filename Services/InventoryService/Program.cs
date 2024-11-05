@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using InventoryService.Data;
 using InventoryService.Repositories;
-using InventoryService.Events;
-using InventoryService.Consumers;
+using Events;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,5 +1,5 @@
 using MassTransit;
-using VendorService.Events;
+using Events;
 
 namespace VendorService.Consumers
 {

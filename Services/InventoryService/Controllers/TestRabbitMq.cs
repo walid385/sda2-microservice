@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MassTransit;
 using System.Threading.Tasks;
-using InventoryService.Events;
+using Events;
 
 [ApiController]
 [Route("api/[controller]")]

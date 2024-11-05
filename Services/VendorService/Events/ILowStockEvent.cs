@@ -1,8 +1,8 @@
-namespace VendorService.Events
+namespace Events
 {
     public interface ILowStockEvent
     {
-        string ProductId { get; }
+        int ProductId { get; }
         int Quantity { get; }
     }
 }

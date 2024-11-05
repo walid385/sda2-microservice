@@ -1,6 +1,6 @@
 using InventoryService.Data;
 using InventoryService.Models;
-using InventoryService.Events;
+using Events;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
