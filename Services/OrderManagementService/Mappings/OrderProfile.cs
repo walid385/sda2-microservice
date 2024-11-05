@@ -1,6 +1,6 @@
 using AutoMapper;
 using OrderManagementService.DTOs;
-using OrderManagementService.Events;
+using Events;
 using OrderManagementService.Models;
 
 namespace OrderManagementService

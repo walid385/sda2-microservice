@@ -1,4 +1,4 @@
-namespace SalesService.Events
+namespace Events
 {
     public class OrderCreatedEvent
     {

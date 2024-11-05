@@ -2,7 +2,7 @@ using AutoMapper;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using OrderManagementService.DTOs;
-using OrderManagementService.Events;
+using Events;
 using OrderManagementService.Models;
 using OrderManagementService.Repositories;
 using OrderManagementService.Services;

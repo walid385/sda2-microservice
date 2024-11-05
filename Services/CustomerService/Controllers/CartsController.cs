@@ -3,6 +3,8 @@ using CustomerService.DTOs;
 using CustomerService.Models;
 using CustomerService.Repositories;
 using CustomerService.Services;
+using Events;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -14,23 +16,16 @@ namespace CustomerService.Controllers
     {
         private readonly ICartRepository _repository;
         private readonly IMapper _mapper;
-        private readonly OrderManagementClient _orderManagementClient;
-        public CartsController(ICartRepository repository, IMapper mapper, OrderManagementClient orderManagementClient )
+        private readonly IPublishEndpoint _publishEndpoint;
+        public CartsController(ICartRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _repository = repository;
             _mapper = mapper;
-            _orderManagementClient = orderManagementClient;
+            _publishEndpoint = publishEndpoint;
+
         }
 
         // GET: api/Carts/ByCustomer/5
-        [HttpGet("ByCustomer/{customerId}")]
-        public async Task<ActionResult<IEnumerable<CartInProgressDto>>> GetCartsByCustomer(int customerId)
-        {
-            var carts = await _repository.GetCartsByCustomerIdAsync(customerId);
-            var cartDtos = _mapper.Map<IEnumerable<CartInProgressDto>>(carts);
-            return Ok(cartDtos);
-        }
-
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout(int customerId)
         {
@@ -43,18 +38,21 @@ namespace CustomerService.Controllers
 
             foreach (var item in carts.SelectMany(cart => cart.ItemLists))
             {
-                var orderDto = new CreateOrderDto
+                var orderEvent = new OrderCreatedEvent
                 {
+                    OrderId = 0, // Set dynamically or leave as default if not available
                     CustomerId = customerId,
+                    OrderDate = DateTime.UtcNow,
+                    TotalAmount = item.UnitPrice * item.Quantity,
                     ProductId = item.ProductId,
                     Quantity = item.Quantity
                 };
 
-                var success = await _orderManagementClient.CreateOrder(orderDto);
-                if (!success)
+                // Publish the event with a routing key
+                await _publishEndpoint.Publish(orderEvent, context =>
                 {
-                    return StatusCode(500, "Failed to place order for product " + item.ProductId);
-                }
+                    context.SetRoutingKey("orderCreated"); // Injecting the routing key
+                });
             }
 
             return Ok("All orders placed successfully.");

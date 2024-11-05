@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using CustomerService.Consumers;
 using CustomerService.Services;
+using Events;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,16 +21,26 @@ builder.Services.AddDbContext<CustomerContext>(options =>
 // Add MassTransit for RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<UpdateCustomerRewardsConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq");
-        cfg.ReceiveEndpoint("update-customer-rewards-queue", e =>
+        cfg.Host("rabbitmq", "/", h =>
         {
-            e.ConfigureConsumer<UpdateCustomerRewardsConsumer>(context);
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.Message<OrderCreatedEvent>(e =>
+        {
+            e.SetEntityName("Events:OrderCreatedEvent");
+        });
+
+        cfg.Publish<OrderCreatedEvent>(e =>
+        {
+            e.ExchangeType = "direct";
         });
     });
 });
+
 
 // Register dependencies without an interface for OrderManagementService
 builder.Services.AddHttpClient<OrderManagementClient>(client =>

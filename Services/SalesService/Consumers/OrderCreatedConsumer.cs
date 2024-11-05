@@ -1,5 +1,5 @@
 using MassTransit;
-using SalesService.Events;
+using Events;
 using SalesService.Models;
 using SalesService.Repositories;
 using System;

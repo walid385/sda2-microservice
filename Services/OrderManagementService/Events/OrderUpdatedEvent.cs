@@ -1,4 +1,4 @@
-namespace OrderManagementService.Events
+namespace Events
 {
    public class OrderUpdatedEvent
 {

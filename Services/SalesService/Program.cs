@@ -4,6 +4,7 @@ using SalesService.Data;
 using SalesService.Repositories;
 using SalesService.Consumers;
 using SalesService.Services;
+using Events;
 using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,10 +20,31 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<OrderCreatedConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq");
+        cfg.Host("rabbitmq", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.Message<OrderCreatedEvent>(e =>
+        {
+            e.SetEntityName("Events:OrderCreatedEvent");
+        });
+
+        cfg.Publish<OrderCreatedEvent>(e =>
+        {
+            e.ExchangeType = "direct";
+        });
+
         cfg.ReceiveEndpoint("order-created-queue", e =>
         {
             e.ConfigureConsumer<OrderCreatedConsumer>(context);
+
+            e.Bind("Events:OrderCreatedEvent", s =>
+            {
+                s.RoutingKey = "orderCreated";
+                s.ExchangeType = "direct";
+            });
         });
     });
 });
