@@ -57,19 +57,19 @@ namespace TaxService.Controllers
         [HttpPost("calculate")]
         public async Task<ActionResult<TaxResultDto>> CalculateTax(TaxCalculationDto calculationDto)
         {
-            // Define a default tax year or logic to determine the applicable tax year.
-            int taxYear = 2024;  // Replace this with a dynamic year selection if needed
-
-            // Retrieve the applicable tax rate based on the defined year
-            var taxRate = await _taxRepository.GetTaxRateAsync(taxYear);  // Using an integer year here
+            // Retrieve tax rate based on state (region)
+            var taxRate = await _taxRepository.GetTaxRateByStateAsync(calculationDto.Region);
             if (taxRate == null)
-                return NotFound("Tax rate not found.");
+                return NotFound("Tax rate for the specified region not found.");
 
-            var taxAmount = calculationDto.Amount * taxRate.TaxRates;
-            var totalAmount = calculationDto.Amount + taxAmount;
+            // Calculate total tax amount
+            float totalTaxRate = taxRate.StateTax + taxRate.CountyTax + taxRate.CityRate;
+            float taxAmount = calculationDto.Amount * totalTaxRate;
+            float totalAmount = calculationDto.Amount + taxAmount;
 
             return Ok(new TaxResultDto { TaxAmount = taxAmount, TotalAmount = totalAmount });
         }
+
 
     }
 }

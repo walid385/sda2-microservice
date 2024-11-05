@@ -32,6 +32,12 @@ namespace TaxService.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<TaxRate> GetTaxRateByStateAsync(string state)
+        {
+            return await _context.TaxRates.FirstOrDefaultAsync(t => t.State == state);
+        }
+
+
         public async Task UpdateTaxRateAsync(TaxRate taxRate)
         {
             _context.TaxRates.Update(taxRate);

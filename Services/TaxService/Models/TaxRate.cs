@@ -16,5 +16,7 @@ namespace TaxService.Models
         public float CityRate { get; set; }
         
         public float TaxRates { get; set; }  // Total tax rate, e.g., 0.08 for 8%
+
+        public string State { get; set; }
     }
 }

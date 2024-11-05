@@ -8,6 +8,7 @@ namespace TaxService.Repositories
     {
         Task<TaxRate> GetTaxRateAsync(int year, string region = null);
         Task<IEnumerable<TaxRate>> GetAllTaxRatesAsync();
+        Task<TaxRate> GetTaxRateByStateAsync(string state);
         Task AddTaxRateAsync(TaxRate taxRate);
         Task UpdateTaxRateAsync(TaxRate taxRate);
         Task DeleteTaxRateAsync(int id);
