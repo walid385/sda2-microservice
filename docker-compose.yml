@@ -61,7 +61,16 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
-      - vendor-data:/vendor.db
+      - vendor-data:/vendor.db    
+  
+  tax-service:
+    build:
+      context: ./services/TaxService
+      dockerfile: Dockerfile
+    ports:
+      - "5005:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
 volumes:
   customer-data:
