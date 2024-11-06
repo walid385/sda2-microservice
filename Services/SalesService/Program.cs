@@ -51,10 +51,19 @@ builder.Services.AddMassTransit(x =>
 
 
 
-// Register dependencies without an interface for InventoryClient
 builder.Services.AddHttpClient<InventoryClient>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5001");
+});
+
+builder.Services.AddHttpClient<CustomerClient>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000");
+});
+
+builder.Services.AddHttpClient<TaxClient>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5005");
 });
 
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();

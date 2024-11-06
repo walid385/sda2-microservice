@@ -7,11 +7,11 @@ namespace SalesService.DTOs
         public int ProductId { get; set; }
         public int CustomerId { get; set; }
         public int Quantity { get; set; }
-        public decimal Total { get; set; }
+        public float Total { get; set; }
         public DateTime Date { get; set; }
         public string CompanyName { get; set; }
         public string Time { get; set; }
-        public decimal? Subtotal { get; set; }
+        public float? Subtotal { get; set; }
         public float? Cost { get; set; }
         public float? Discount { get; set; }
         public float? Tax { get; set; }

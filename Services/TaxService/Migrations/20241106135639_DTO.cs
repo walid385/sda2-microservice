@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace SalesService.Migrations
+namespace TaxService.Migrations
 {
     /// <inheritdoc />
-    public partial class ProductDTOUpdate : Migration
+    public partial class DTO : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

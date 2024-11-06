@@ -18,12 +18,18 @@ namespace CustomerService.Controllers
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly InventoryClient _inventoryClient;
-        public CartsController(ICartRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, InventoryClient inventoryClient)
+        private readonly ICustomerRepository _customerRepository;
+        private readonly TaxClient _taxClient;
+        public CartsController(ICartRepository repository,
+        IMapper mapper, IPublishEndpoint publishEndpoint, InventoryClient inventoryClient,
+        ICustomerRepository customerRepository, TaxClient taxClient)
         {
             _repository = repository;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _inventoryClient = inventoryClient;
+            _customerRepository = customerRepository;
+            _taxClient = taxClient;
 
         }
 
@@ -45,6 +51,28 @@ namespace CustomerService.Controllers
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout(int customerId)
         {
+            // Fetch customer information
+            var customer = await _customerRepository.GetCustomerByIdAsync(customerId);
+            if (customer == null)
+            {
+                Console.WriteLine($"Customer with ID {customerId} not found.");
+                return NotFound("Customer not found.");
+            }
+
+            // Ensure State is present in customer data
+            if (string.IsNullOrEmpty(customer.State))
+            {
+                Console.WriteLine($"State information for customer {customerId} is missing. Using default tax rate.");
+                return BadRequest("State information is required for tax calculation.");
+            }
+
+            // Fetch tax rate based on customer state
+            var taxRate = await _taxClient.GetTaxRateByStateAsync(customer.State);
+            if (taxRate == null)
+            {
+                Console.WriteLine("Tax calculation failed, no default rate available.");
+                return StatusCode(500, "Failed to retrieve tax rate.");
+            }
             var carts = await _repository.GetCartsByCustomerIdAsync(customerId);
 
             if (carts == null || !carts.Any() || !carts.SelectMany(cart => cart.ItemLists).Any())
@@ -56,29 +84,32 @@ namespace CustomerService.Controllers
             {
                 // Retrieve the price for each product from InventoryService
                 var unitPrice = await _inventoryClient.GetProductPrice(item.ProductId);
-
                 if (unitPrice == null)
                 {
                     return BadRequest($"Price for product {item.ProductId} not found.");
                 }
 
                 // Update item with the retrieved unit price
-                item.UnitPrice = unitPrice.Value;
+                item.UnitPrice = (float)unitPrice.Value;
+
+                // Calculate total amount with tax
+                var taxAmount = (float)unitPrice.Value * item.Quantity * taxRate.TotalTaxRate;
+                var totalWithTax = (float)(unitPrice.Value * item.Quantity) + taxAmount;
 
                 var orderEvent = new OrderCreatedEvent
                 {
-                    OrderId = 0, // Set dynamically or leave as default if not available
+                    OrderId = 0,  // dynamically set or leave default
                     CustomerId = customerId,
                     OrderDate = DateTime.UtcNow,
-                    TotalAmount = item.UnitPrice * item.Quantity, // Calculate total amount using the retrieved price
+                    TotalAmount = totalWithTax,
                     ProductId = item.ProductId,
                     Quantity = item.Quantity
                 };
 
-                // Publish the event with a routing key
+                // Publish the event
                 await _publishEndpoint.Publish(orderEvent, context =>
                 {
-                    context.SetRoutingKey("orderCreated"); // Injecting the routing key
+                    context.SetRoutingKey("orderCreated");
                 });
             }
 
@@ -108,7 +139,7 @@ namespace CustomerService.Controllers
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
-                    UnitPrice = unitPrice.Value // Ensure unitPrice is being assigned correctly
+                    UnitPrice = (float)unitPrice.Value
                 });
             }
 

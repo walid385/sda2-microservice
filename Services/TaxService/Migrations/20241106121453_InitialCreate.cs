@@ -5,7 +5,7 @@
 namespace TaxService.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,8 @@ namespace TaxService.Migrations
                     StateTax = table.Column<float>(type: "REAL", nullable: false),
                     CountyTax = table.Column<float>(type: "REAL", nullable: false),
                     CityRate = table.Column<float>(type: "REAL", nullable: false),
-                    TaxRates = table.Column<float>(type: "REAL", nullable: false)
+                    TaxRates = table.Column<float>(type: "REAL", nullable: false),
+                    State = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

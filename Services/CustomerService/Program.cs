@@ -46,6 +46,11 @@ builder.Services.AddHttpClient<InventoryClient>(client =>
     client.BaseAddress = new Uri("http://localhost:5001");
 });
 
+builder.Services.AddHttpClient<TaxClient>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5005");
+});
+
 
 // Register repositories for Dependency Injection
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();

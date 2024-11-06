@@ -67,8 +67,47 @@ namespace TaxService.Controllers
             float taxAmount = calculationDto.Amount * totalTaxRate;
             float totalAmount = calculationDto.Amount + taxAmount;
 
-            return Ok(new TaxResultDto { TaxAmount = taxAmount, TotalAmount = totalAmount });
+            return Ok(new TaxResultDto { TaxAmount = taxAmount, TotalAmount = totalAmount, TaxRates = totalTaxRate });
         }
+
+
+        // GET: api/tax/rate/{state}
+        [HttpGet("rate/{state}")]
+        public async Task<ActionResult<TaxRateDto>> GetTaxRateByState(string state)
+        {
+            if (string.IsNullOrEmpty(state))
+            {
+                state = "DEFAULT";
+            }
+
+            // Retrieve the tax rate for the specified state
+            var taxRate = await _taxRepository.GetTaxRateByStateAsync(state);
+
+            // If not found, use the 'DEFAULT' rate
+            if (taxRate == null)
+            {
+                taxRate = await _taxRepository.GetTaxRateByStateAsync("DEFAULT");
+                if (taxRate == null)
+                {
+                    return NotFound("No applicable tax rate found, and 'DEFAULT' rate is missing.");
+                }
+            }
+
+            // Calculate the TotalTaxRate
+            float totalTaxRate = taxRate.StateTax + taxRate.CountyTax + taxRate.CityRate;
+
+            // Return the TaxRateDto with TotalTaxRate included
+            return Ok(new TaxRateDto
+            {
+                StateTax = taxRate.StateTax,
+                CountyTax = taxRate.CountyTax,
+                CityRate = taxRate.CityRate,
+                State = taxRate.State,
+            });
+        }
+
+
+
 
 
     }

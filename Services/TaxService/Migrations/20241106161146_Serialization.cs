@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace SalesService.Migrations
+namespace TaxService.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateEvent : Migration
+    public partial class Serialization : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

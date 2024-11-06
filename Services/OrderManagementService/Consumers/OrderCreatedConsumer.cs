@@ -29,7 +29,7 @@ namespace OrderManagementService.Consumers
                 ProductId = orderEvent.ProductId,
                 CustomerId = orderEvent.CustomerId,
                 Quantity = orderEvent.Quantity,
-                TotalAmount = orderEvent.Total, // Ensure 'Total' is set correctly in the event
+                TotalAmount = orderEvent.Total,
                 OrderDate = orderEvent.OrderDate
             };
 

@@ -13,13 +13,13 @@ namespace SalesService.Models
         public int ProductId { get; set; }
         public int CustomerId { get; set; }
         public int Quantity { get; set; }
-        public decimal Total { get; set; }
+        public float Total { get; set; }
         
         public DateTime Date { get; set; } = DateTime.UtcNow;
         public string CompanyName { get; set; } = "DefaultCompany";
         public string Time { get; set; } = DateTime.UtcNow.ToString("HH:mm:ss");
         
-        public decimal? Subtotal { get; set; }
+        public float? Subtotal { get; set; }
 
         // Make optional properties nullable if they aren’t always needed
         public float? Cost { get; set; }

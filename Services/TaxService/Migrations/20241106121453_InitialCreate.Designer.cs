@@ -10,8 +10,8 @@ using TaxService.Data;
 namespace TaxService.Migrations
 {
     [DbContext(typeof(TaxContext))]
-    [Migration("20241105161641_AddStateToTaxRates")]
-    partial class AddStateToTaxRates
+    [Migration("20241106121453_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

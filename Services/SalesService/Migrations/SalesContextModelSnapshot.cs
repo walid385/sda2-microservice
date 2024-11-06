@@ -90,8 +90,8 @@ namespace SalesService.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal?>("Subtotal")
-                        .HasColumnType("TEXT");
+                    b.Property<float?>("Subtotal")
+                        .HasColumnType("REAL");
 
                     b.Property<float?>("Tax")
                         .HasColumnType("REAL");
@@ -103,8 +103,8 @@ namespace SalesService.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Total")
-                        .HasColumnType("TEXT");
+                    b.Property<float>("Total")
+                        .HasColumnType("REAL");
 
                     b.HasKey("TicketId");
 

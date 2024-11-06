@@ -6,5 +6,6 @@ namespace CustomerService.DTOs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
+        public string State { get; set; }
     }
 }

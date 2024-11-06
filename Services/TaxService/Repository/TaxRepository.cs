@@ -34,8 +34,17 @@ namespace TaxService.Repositories
 
         public async Task<TaxRate> GetTaxRateByStateAsync(string state)
         {
-            return await _context.TaxRates.FirstOrDefaultAsync(t => t.State == state);
+            var taxRate = await _context.TaxRates.FirstOrDefaultAsync(t => t.State == state);
+
+            if (taxRate == null)
+            {
+                // Fetch the default rate if the specified state is not in the database
+                taxRate = await _context.TaxRates.FirstOrDefaultAsync(t => t.State == "DEFAULT");
+            }
+
+            return taxRate;
         }
+
 
 
         public async Task UpdateTaxRateAsync(TaxRate taxRate)

@@ -11,8 +11,8 @@ using SalesService.Data;
 namespace SalesService.Migrations
 {
     [DbContext(typeof(SalesContext))]
-    [Migration("20241102162440_ProductDTOUpdate")]
-    partial class ProductDTOUpdate
+    [Migration("20241106121012_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,20 +59,20 @@ namespace SalesService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("CartPurchase")
+                    b.Property<bool?>("CartPurchase")
                         .HasColumnType("INTEGER");
 
-                    b.Property<float>("Cash")
+                    b.Property<float?>("Cash")
                         .HasColumnType("REAL");
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("REAL");
 
-                    b.Property<float>("Credit")
+                    b.Property<float?>("Credit")
                         .HasColumnType("REAL");
 
                     b.Property<int>("CustomerId")
@@ -81,10 +81,10 @@ namespace SalesService.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("Discount")
+                    b.Property<float?>("Discount")
                         .HasColumnType("REAL");
 
-                    b.Property<int>("EmployeeId")
+                    b.Property<int?>("EmployeeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ProductId")
@@ -93,13 +93,13 @@ namespace SalesService.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<float>("Subtotal")
+                    b.Property<float?>("Subtotal")
                         .HasColumnType("REAL");
 
-                    b.Property<float>("Tax")
+                    b.Property<float?>("Tax")
                         .HasColumnType("REAL");
 
-                    b.Property<float>("TaxRate")
+                    b.Property<float?>("TaxRate")
                         .HasColumnType("REAL");
 
                     b.Property<string>("Time")

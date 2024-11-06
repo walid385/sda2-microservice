@@ -2,19 +2,19 @@
 
 #nullable disable
 
-namespace SalesService.Migrations
+namespace OrderManagementService.Migrations
 {
     /// <inheritdoc />
-    public partial class OptioSubtotal : Migration
+    public partial class Floats : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<decimal>(
-                name: "Subtotal",
-                table: "Tickets",
-                type: "TEXT",
-                nullable: true,
+            migrationBuilder.AlterColumn<float>(
+                name: "TotalAmount",
+                table: "Orders",
+                type: "REAL",
+                nullable: false,
                 oldClrType: typeof(decimal),
                 oldType: "TEXT");
         }
@@ -23,14 +23,12 @@ namespace SalesService.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<decimal>(
-                name: "Subtotal",
-                table: "Tickets",
+                name: "TotalAmount",
+                table: "Orders",
                 type: "TEXT",
                 nullable: false,
-                defaultValue: 0m,
-                oldClrType: typeof(decimal),
-                oldType: "TEXT",
-                oldNullable: true);
+                oldClrType: typeof(float),
+                oldType: "REAL");
         }
     }
 }

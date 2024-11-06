@@ -10,8 +10,8 @@ using TaxService.Data;
 namespace TaxService.Migrations
 {
     [DbContext(typeof(TaxContext))]
-    [Migration("20241105142111_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20241106135639_DTO")]
+    partial class DTO
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,10 @@ namespace TaxService.Migrations
 
                     b.Property<float>("CountyTax")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<float>("StateTax")
                         .HasColumnType("REAL");

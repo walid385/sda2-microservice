@@ -11,5 +11,6 @@ namespace TaxService.DTOs
     {
         public float TaxAmount { get; set; }
         public float TotalAmount { get; set; } // Amount + TaxAmount
+        public float TaxRates { get; set; } // Total tax rate
     }
 }

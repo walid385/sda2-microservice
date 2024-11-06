@@ -65,7 +65,7 @@ namespace OrderManagementService.Controllers
             }
 
             // Calculate the total amount
-            var totalAmount = product.UnitPrice * createOrderDto.Quantity;
+            var totalAmount = (float)(product.UnitPrice * createOrderDto.Quantity);
 
             // Map CreateOrderDto to Order entity
             var order = _mapper.Map<Order>(createOrderDto);
@@ -111,7 +111,7 @@ namespace OrderManagementService.Controllers
             }
 
             // Calculate the total amount
-            var totalAmount = product.UnitPrice * updateOrderDto.Quantity;
+            var totalAmount = (float)(product.UnitPrice * updateOrderDto.Quantity);
 
             // Update order properties
             existingOrder.ProductId = updateOrderDto.ProductId;
