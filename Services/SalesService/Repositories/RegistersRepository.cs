@@ -34,4 +34,7 @@ namespace SalesService.Repositories
         public async Task CloseRegisterAsync(RegistersTable register)
         {
             _context.Registers.Update(register);
-            await _context.SaveChangesA
+            await _context.SaveChangesAsync();
+        }
+    }
+}
