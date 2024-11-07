@@ -72,6 +72,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
+  employee-service:
+    build:
+      context: ./services/EmployeeService
+      dockerfile: Dockerfile
+    ports:
+      - "5006:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
 volumes:
   customer-data:
   inventory-data:

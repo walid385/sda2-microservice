@@ -21,7 +21,7 @@ namespace OrderManagementService.Consumers
             var orderEvent = context.Message;
 
             // Log received event information
-            Console.WriteLine($"Received OrderCreatedEvent for ProductId: {orderEvent.ProductId}, Total: {orderEvent.Total}");
+            Console.WriteLine($"Received OrderCreatedEvent for ProductId: {orderEvent.ProductId}, Total: {orderEvent.TotalAmount}");
 
             // Create a new order based on the event data
             var order = new Order
@@ -29,13 +29,15 @@ namespace OrderManagementService.Consumers
                 ProductId = orderEvent.ProductId,
                 CustomerId = orderEvent.CustomerId,
                 Quantity = orderEvent.Quantity,
-                TotalAmount = orderEvent.Total,
+                TotalAmount = orderEvent.TotalAmount,
                 OrderDate = orderEvent.OrderDate
             };
 
             // Save the order in the database
             await _orderRepository.AddOrderAsync(order);
-            Console.WriteLine($"Order created for Product ID: {order.ProductId}, Order ID: {orderEvent.OrderId}");
+
+            // Log the generated OrderId after saving
+            Console.WriteLine($"Order created for Product ID: {order.ProductId}, Order ID: {order.OrderId}, Total: {order.TotalAmount}");
         }
     }
 }

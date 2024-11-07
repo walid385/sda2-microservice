@@ -14,7 +14,7 @@ namespace OrderManagementService
 
             // Mapping from Order model to OrderCreatedEvent for publishing events
             CreateMap<Order, OrderCreatedEvent>()
-                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.TotalAmount));
+                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount));
 
             // Mapping from Order model to OrderDto for returning to clients
             CreateMap<Order, OrderDto>();
