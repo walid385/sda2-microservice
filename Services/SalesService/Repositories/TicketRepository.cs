@@ -28,6 +28,7 @@ namespace SalesService.Repositories
             await _context.Tickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
         }
+        
 
         public async Task UpdateTicketAsync(TicketSystem ticket)
         {

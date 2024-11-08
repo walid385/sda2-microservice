@@ -12,19 +12,18 @@ namespace EmployeeService.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Unique constraint on Email in the Employee entity
             modelBuilder.Entity<Employee>()
                 .HasIndex(e => e.Email)
                 .IsUnique();
 
-            // Foreign key relationship between OrderAssignment and Employee
             modelBuilder.Entity<OrderAssignment>()
-                .HasOne<Employee>()
-                .WithMany()
+                .HasOne(oa => oa.Employee) 
+                .WithMany() 
                 .HasForeignKey(oa => oa.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent deletion if linked to OrderAssignment
+                .OnDelete(DeleteBehavior.Restrict); 
 
             base.OnModelCreating(modelBuilder);
         }
     }
 }
+

@@ -26,11 +26,12 @@ namespace OrderManagementService.Consumers
             // Create a new order based on the event data
             var order = new Order
             {
+                OrderId = orderEvent.OrderId, 
                 ProductId = orderEvent.ProductId,
                 CustomerId = orderEvent.CustomerId,
                 Quantity = orderEvent.Quantity,
                 TotalAmount = orderEvent.TotalAmount,
-                OrderDate = orderEvent.OrderDate
+                OrderDate = orderEvent.OrderDate,
             };
 
             // Save the order in the database

@@ -50,22 +50,36 @@ namespace EmployeeService.Repositories
 
         public async Task<Employee> AssignEmployeeByStateAsync(string state)
         {
-            // Try to get an employee in the specific state
+            // Attempt to assign an employee in the specified state
             var employeeInState = await _context.Employees
                 .Where(e => e.State == state)
-                .OrderBy(e => e.StartDate) // Prioritize by experience (earliest start date)
+                .OrderBy(e => e.StartDate) // Most experienced in the state
                 .FirstOrDefaultAsync();
 
+            // If an employee in the state is found, return that employee
             if (employeeInState != null)
             {
+                Console.WriteLine($"Employee found in state {state}: {employeeInState.EmployeeId}");
                 return employeeInState;
             }
 
-            // Fallback: Find the most experienced employee in any state
-            return await _context.Employees
+            // Fallback to the most experienced employee across all states
+            var mostExperiencedEmployee = await _context.Employees
                 .OrderBy(e => e.StartDate)
                 .FirstOrDefaultAsync();
+
+            if (mostExperiencedEmployee != null)
+            {
+                Console.WriteLine($"Fallback employee assigned: {mostExperiencedEmployee.EmployeeId} from state {mostExperiencedEmployee.State}");
+            }
+            else
+            {
+                Console.WriteLine("No employees available to assign.");
+            }
+
+            return mostExperiencedEmployee; // Will return null if no employees exist, else the fallback
         }
+
 
         public async Task SaveOrderAssignmentAsync(int orderId, int employeeId)
         {

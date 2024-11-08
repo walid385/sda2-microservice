@@ -1,4 +1,3 @@
-// EmployeeService.Models.OrderAssignment.cs
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,19 +7,18 @@ namespace EmployeeService.Models
     public class OrderAssignment
     {
         [Key]
-        public int AssignmentId { get; set; } // Primary Key
+        public int AssignmentId { get; set; } 
 
         [Required]
-        public int OrderId { get; set; } // ID of the order
+        public int OrderId { get; set; } 
 
         [Required]
-        [ForeignKey("Employee")]
-        public int EmployeeId { get; set; } // ID of the assigned employee
+        public int EmployeeId { get; set; } 
 
         [Required]
-        public DateTime AssignedDate { get; set; } = DateTime.UtcNow; // Date of assignment
+        public DateTime AssignedDate { get; set; } = DateTime.UtcNow; 
 
-        // Navigation property
-        public virtual Employee Employee { get; set; } // Links to Employee table
+        [ForeignKey("EmployeeId")]
+        public Employee Employee { get; set; } 
     }
 }
