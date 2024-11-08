@@ -98,7 +98,7 @@ namespace CustomerService.Controllers
 
                 var orderEvent = new OrderCreatedEvent
                 {
-                    OrderId = 0,  // dynamically set or leave default
+                    
                     CustomerId = customerId,
                     OrderDate = DateTime.UtcNow,
                     TotalAmount = totalWithTax,

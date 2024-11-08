@@ -22,6 +22,9 @@ namespace EmployeeService.Consumers
         {
             var orderEvent = context.Message;
 
+            // Log received OrderId and CustomerId
+            Console.WriteLine($"Received OrderCreatedEvent with OrderId: {orderEvent.OrderId}, CustomerId: {orderEvent.CustomerId}");
+
             // Fetch additional data needed
             var customer = await _customerClient.GetCustomerInfo(orderEvent.CustomerId);
             if (customer == null)
@@ -38,13 +41,14 @@ namespace EmployeeService.Consumers
             if (employee != null)
             {
                 await _employeeRepository.SaveOrderAssignmentAsync(orderEvent.OrderId, employee.EmployeeId);
-                Console.WriteLine($"Employee {employee.EmployeeId} assigned to Order {orderEvent.OrderId} for Customer {orderEvent.CustomerId} in State {state}");
+                Console.WriteLine($"Employee {employee.EmployeeId} assigned for Customer {orderEvent.CustomerId} in State {state}");
             }
             else
             {
-                Console.WriteLine($"No employee could be assigned to Order {orderEvent.OrderId} for Customer {orderEvent.CustomerId} in State {state}");
+                Console.WriteLine($"No employee could be assigned for Customer {orderEvent.CustomerId} in State {state}");
             }
         }
     }
+
 
 }
