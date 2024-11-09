@@ -160,7 +160,7 @@ namespace CustomerService.Controllers
         }
 
         // PUT: api/Carts/5
-        [HttpPut("{id}")]
+        [HttpPut("{Cartid}")]
         public async Task<IActionResult> UpdateCart(int id, CartInProgressDto cartDto)
         {
             if (id != cartDto.CartId)

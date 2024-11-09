@@ -81,6 +81,24 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
+  gateway:
+    build:
+      context: ./Gateway/APIGateway
+      dockerfile: Dockerfile
+    ports:
+      - "7777:80"
+    volumes:
+      - ./Gateway/APIGateway/ocelot.json:/app/ocelot.json
+    depends_on:
+      - customer-service
+      - inventory-service
+      - sales-service
+      - order-service
+      - vendor-service
+      - tax-service
+      - employee-service
+
+
 volumes:
   customer-data:
   inventory-data:
