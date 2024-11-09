@@ -1,0 +1,16 @@
+{
+  "generatedBy": "Microsoft.NET.Sdk.Functions.Generator-4.4.0",
+  "configurationSource": "attributes",
+  "bindings": [
+    {
+      "type": "rabbitMQTrigger",
+      "connectionStringSetting": "RabbitMQConnection",
+      "queueName": "low_stock_alert_queue",
+      "disableCertificateValidation": false,
+      "name": "message"
+    }
+  ],
+  "disabled": false,
+  "scriptFile": "../bin/LowStockFunctionApp.dll",
+  "entryPoint": "LowStockFunctionApp.LowStockNotificationFunction.Run"
+}

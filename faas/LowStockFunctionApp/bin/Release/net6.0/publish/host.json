@@ -1,0 +1,17 @@
+{
+    "version": "2.0",
+    "logging": {
+        "logLevel": {
+            "Function.LowStockNotificationFunction": "Information",
+            "Function.TriggerLowStockFunction": "Information",
+            "default": "Information"
+        },
+        "applicationInsights": {
+            "samplingSettings": {
+                "isEnabled": false,
+                "excludedTypes": "Request"
+            },
+            "enableLiveMetricsFilters": true
+        }
+    }
+}
