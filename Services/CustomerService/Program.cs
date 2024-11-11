@@ -2,7 +2,6 @@ using CustomerService.Data;
 using CustomerService.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
-using CustomerService.Consumers;
 using CustomerService.Services;
 using Events;
 
